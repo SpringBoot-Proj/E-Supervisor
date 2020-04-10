@@ -19,19 +19,19 @@ public class RoleDao {
 	@Autowired
 	JdbcTemplate stmt;
 
-	public boolean addRoleType(UserBean userBean,String roleType) {
+	public int addRoleType(int userid,String roleType) {
 
 		RoleBean roleBean = null;
 		roleBean = getRole(roleType);
-		int rowsAffected = stmt.update("insert into users_role(userid,roleid) values(?,?)",userBean.getUser_id(),roleBean.getRoleID());
+		int rowsAffected = stmt.update("insert into users_role(userid,roleid) values(?,?)",userid,roleBean.getRoleID());
 		
 		if(rowsAffected>0)
 		{
-			return true;
+			return roleBean.getRoleID();
 		}
 		else
 		{
-			return false;
+			return -1;
 		}
 	}
 	
@@ -63,6 +63,24 @@ public class RoleDao {
 				},new MyRowMapper());
 		
 		return roleBean;
+	}
+	
+	public int updateRoleType(int userid,String roleName)
+	{
+
+		RoleBean roleBean = null;
+		roleBean = getRole(roleName);
+		int rowsAffected = stmt.update("update into users_role set roleid=? where userid=?",roleBean.getRoleID(),userid);
+
+		if(rowsAffected>0)
+		{
+			return roleBean.getRoleID();
+		}
+		else
+		{
+			return -1;
+		}
+		
 	}
 
 }
