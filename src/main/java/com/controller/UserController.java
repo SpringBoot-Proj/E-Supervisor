@@ -15,10 +15,9 @@ public class UserController {
 	UserDao userDao;
 	
 	@PostMapping("/adduser")
-	public UserBean add_user(UserBean userBean)
+	public void add_user(UserBean userBean,String roleName)
 	{
 		userDao.add_user(userBean);
-		return userBean;
 	}
 	
 	@PutMapping("/updatepro")
