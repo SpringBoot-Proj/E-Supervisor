@@ -25,6 +25,7 @@ public class UserController {
 		responseBean.setCode(200);
 		return responseBean;
 	
+	
 	}
 	
 	@PutMapping("/updatepro")
