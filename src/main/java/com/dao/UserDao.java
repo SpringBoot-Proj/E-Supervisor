@@ -12,9 +12,11 @@ public class UserDao {
 	@Autowired
 	JdbcTemplate stmt;
 	
-	public void add_user(UserBean userBean)
+	public int add_user(UserBean userBean)
 	{
+		int userid = 0;
 		stmt.update("insert into users (first_name, last_name, email, password) values (?,?,?,?)", userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(), userBean.getPassword());
+		return userid;
 	}
 	
 	public boolean update_profile(UserBean userBean)
