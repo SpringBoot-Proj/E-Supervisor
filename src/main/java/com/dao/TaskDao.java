@@ -127,9 +127,8 @@ public class TaskDao {
 					days.set(rowNum,days.get(rowNum)/ (1000 * 60 * 60 * 24));	
 				}else {
 					Date date= new Date();
-//						days.add(rowNum,-1000L);
 					days.add(rowNum,date.getTime() - taskBean.getEnd_date().getTime());
-					days.set(rowNum,days.get(rowNum)/ (1000 * 60 * 60 * 24));
+					days.set(rowNum,-days.get(rowNum)/ (1000 * 60 * 60 * 24));
 				}
 				System.out.println("day   "+days.get(rowNum));
 			return taskBean;
