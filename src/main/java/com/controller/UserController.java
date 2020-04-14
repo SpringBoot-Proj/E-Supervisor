@@ -1,6 +1,7 @@
 package com.controller;
 
 
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -17,16 +18,26 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bean.ResponseBean;
 import com.bean.UserBean;
+
 import com.bean.UserDataBean;
+
+
 import com.dao.UserDao;
 
 @RestController
 public class UserController {
+
 	@Autowired
 	UserDao userDao;
 
@@ -76,6 +87,42 @@ public class UserController {
 			responseBean.setMessage("Logout Successful..");			
 		
 		return responseBean;
+	}
+	
+	@PostMapping("/adduser")
+	public ResponseBean<UserBean> add_user(UserBean userBean,String roleName)
+	{
+		int userid = userDao.add_user(userBean);
+	
+		ResponseBean<UserBean> responseBean = new ResponseBean<>();
+		responseBean.setMessage("user added");
+		responseBean.setCode(200);
+		return responseBean;
+	}
+	
+	@PostMapping("/changepassword/{userid}")
+	public ResponseBean<?> change_password(@PathVariable int userid, @RequestParam("old_password") String oldPassword, @RequestParam("new_password") String newPassword)
+	{
+	boolean isError = userDao.change_password(userid,oldPassword,newPassword);
+
+	ResponseBean<Object> responseBean = new ResponseBean<>();
+
+	if(isError)
+	{
+	responseBean.setMessage("Not changed");
+	}
+	else
+	{
+	responseBean.setMessage("password changed");
+	}
+	return responseBean;
+	}
+	
+	@PutMapping("/updatepro")
+	public UserBean update_profile(UserBean userBean)
+	{
+		//userDao.update_profile(userBean);
+		return userBean;
 	}
 	
 	@PostMapping("/resetpass")
@@ -177,4 +224,12 @@ public class UserController {
 
 	
 }
+
+
+
+	
+	
+	
+	
+
 
