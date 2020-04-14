@@ -23,8 +23,10 @@ import com.bean.UserBean;
 public class TaskDao {
 	@Autowired
 	JdbcTemplate stmt;
-	ArrayList<Long> days=new ArrayList<>();
+	boolean isOverPerf = false;
+	ArrayList<Double> days=new ArrayList<>();
 	public List<TaskBean> getUnderPerfTasks() {
+		isOverPerf=false;
 		days.clear();
 		List<TaskBean> taskList = new ArrayList<>();
 		String query="select * from task where (current_date>end_date)  and (completion_date is null or end_date<completion_date)";
@@ -38,7 +40,32 @@ public class TaskDao {
 		Collections.sort(myList, new Comparator<KeyValue>(){
             @Override
             public int compare(KeyValue arg0, KeyValue arg1) {
-                return Long.compare(arg0.getValue(), arg1.getValue());
+                return Double.compare(arg0.getValue(), arg1.getValue());
+            }
+        });
+		List<TaskBean> taskList2 = new ArrayList<>();
+		for(KeyValue kv:myList)
+		{
+			taskList2.add(taskList.get(kv.getKey()));
+		}
+		return taskList2;
+	}
+	public List<TaskBean> getOverPerfTasks() {
+		days.clear();
+		isOverPerf=true;
+		List<TaskBean> taskList = new ArrayList<>();
+		String query="select * from task where completion_date is not null and end_date>=completion_date";
+		taskList = stmt.query(query,new TaskRowMapper());
+		List<KeyValue> myList = new ArrayList<>();
+		System.out.println(days);
+		for(int i=0;i<days.size();i++)
+		{
+			myList.add(new KeyValue(i,days.get(i)));
+		}
+		Collections.sort(myList, new Comparator<KeyValue>(){
+            @Override
+            public int compare(KeyValue arg0, KeyValue arg1) {
+                return Double.compare(arg0.getValue(), arg1.getValue());
             }
         });
 		List<TaskBean> taskList2 = new ArrayList<>();
@@ -50,9 +77,9 @@ public class TaskDao {
 	}
 	class KeyValue {
 	    private int key;
-	    private Long value;
+	    private Double value;
 
-	    public KeyValue(int i, Long j) {
+	    public KeyValue(int i, Double j) {
 	        key  = i;
 	        value = j;
 	    }
@@ -63,11 +90,11 @@ public class TaskDao {
 	        this.key = key;
 	    }
 
-	    public Long getValue() {
+	    public Double getValue() {
 	        return value;
 	    }
 
-	    public void setValue(Long value) {
+	    public void setValue(Double value) {
 	        this.value = value;
 	    }
 
@@ -76,6 +103,7 @@ public class TaskDao {
 	        return "("+key+","+value.toString()+")";                
 	    }
 	}
+
 	public HashMap<UserBean,List<TaskBean>> getAdminList() {	
 		int role = getRoleId("admin");
 		if(role==-1) {
@@ -123,11 +151,20 @@ public class TaskDao {
 				
 				if(taskBean.getCompletion_date()!=null)
 				{
-					days.add(rowNum,taskBean.getCompletion_date().getTime() - taskBean.getEnd_date().getTime());
-					days.set(rowNum,days.get(rowNum)/ (1000 * 60 * 60 * 24));	
+					if(isOverPerf==true)
+					{
+						long totalDiff = taskBean.getEnd_date().getTime()-taskBean.getStart_date().getTime();
+						long remainingDiff = taskBean.getEnd_date().getTime()-taskBean.getCompletion_date().getTime();
+						double per = remainingDiff * 1.0 /totalDiff;
+						System.out.println("percent "+rowNum+": "+totalDiff);
+						days.add(rowNum,per);
+					}else {
+					days.add(rowNum,(1.0)*taskBean.getCompletion_date().getTime() - taskBean.getEnd_date().getTime());
+					days.set(rowNum,days.get(rowNum)/ (1000 * 60 * 60 * 24));
+					}
 				}else {
 					Date date= new Date();
-					days.add(rowNum,date.getTime() - taskBean.getEnd_date().getTime());
+					days.add(rowNum,(1.0)*date.getTime() - taskBean.getEnd_date().getTime());
 					days.set(rowNum,-days.get(rowNum)/ (1000 * 60 * 60 * 24));
 				}
 				System.out.println("day   "+days.get(rowNum));
