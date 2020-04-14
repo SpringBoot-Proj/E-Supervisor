@@ -110,15 +110,16 @@ public class UserDao {
 		stmt.update("insert into users (first_name, last_name, email, password) values (?,?,?,?)", userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(), userBean.getPassword());
 		return userid;
 	}
-	
-	/*
-	 * public boolean update_profile(UserBean userBean) { int i= stmt.
-	 * update("update users set first_name = ?, last_name= ?, email= ?, password = ? where user_id = ? "
-	 * ,userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(),
-	 * userBean.getPassword(), userBean.getUser_id());
-	 * 
-	 * if(i==1) return true; else return false; }
-	 */
+  
+	  public boolean update_profile(UserBean userBean)
+	  {
+		  int i= stmt. update("update users set first_name = ?, last_name= ?, email= ?, password = ? where user_id = ? ",userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(),userBean.getPassword(), userBean.getUser_id());
+		  if(i==1)
+			  return true;
+		  else 
+			  return false;
+	  }
+	 
 
 	public boolean change_password(int id, String oldPassword, String newPassword) {
 
