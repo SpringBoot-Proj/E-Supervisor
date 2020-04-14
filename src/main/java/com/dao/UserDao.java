@@ -1,5 +1,6 @@
 package com.dao;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,19 +19,30 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+
 import org.springframework.stereotype.Repository;
 
 import com.bean.UserBean;
+
 
 /*
  * add_user --> Aastha change_password --> Aastha update_profile --> Aastha
  * delete_user --> Pheni list_users --> Pheni view_user --> Pheni
  */
+
 @Repository
 public class UserDao {
 
 	@Autowired
 	JdbcTemplate stmt;
+
 
 
 
@@ -90,4 +102,55 @@ public class UserDao {
 		}
 	}
 
+
+	
+	public int add_user(UserBean userBean)
+	{
+		int userid = 0;
+		stmt.update("insert into users (first_name, last_name, email, password) values (?,?,?,?)", userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(), userBean.getPassword());
+		return userid;
+	}
+	
+	/*
+	 * public boolean update_profile(UserBean userBean) { int i= stmt.
+	 * update("update users set first_name = ?, last_name= ?, email= ?, password = ? where user_id = ? "
+	 * ,userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(),
+	 * userBean.getPassword(), userBean.getUser_id());
+	 * 
+	 * if(i==1) return true; else return false; }
+	 */
+
+	public boolean change_password(int id, String oldPassword, String newPassword) {
+
+		class MyRowMapper implements RowMapper<UserBean>
+		{
+
+			@Override
+			public UserBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+				UserBean userBean  = new UserBean();
+				userBean.setEmail(rs.getString("email"));
+				userBean.setPassword(rs.getString("password"));
+				userBean.setFirst_name(rs.getString("first_name"));
+				userBean.setLast_name(rs.getString("last_name"));
+				return userBean;
+				
+			}
+			
+		}
+		
+		
+		ArrayList<UserBean> list= (ArrayList<UserBean>) stmt.query("select * from users where user_id="+id+" and password = '"+oldPassword+"'",new MyRowMapper());
+		System.out.println(list.size());
+		if(list.size()==1)
+		{
+		int rows = stmt.update("update users set password=? where user_id=?",newPassword,id);
+		System.out.println("list returned from the database ");
+		if(rows>=1)
+		{ System.out.println("updated in the database");
+		return false;
+		}
+		}
+
+		return true;
+		}
 }
