@@ -121,7 +121,7 @@ public class UserController {
 	@PutMapping("/updatepro")
 	public UserBean update_profile(UserBean userBean)
 	{
-		//userDao.update_profile(userBean);
+		userDao.update_profile(userBean);
 		return userBean;
 	}
 	
