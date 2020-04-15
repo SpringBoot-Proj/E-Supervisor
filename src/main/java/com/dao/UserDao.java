@@ -119,7 +119,6 @@ public class UserDao {
 		  else 
 			  return false;
 	  }
-	 
 
 	public boolean change_password(int id, String oldPassword, String newPassword) {
 
