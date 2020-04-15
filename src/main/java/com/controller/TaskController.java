@@ -1,6 +1,10 @@
 package com.controller;
 
+
 import java.util.ArrayList;
+
+import java.util.HashMap;
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -24,19 +28,57 @@ public class TaskController {
 	TaskDao taskDao;
 	
 	@GetMapping("/list_admin")
-	public ResponseBean listAdmin()
+	public ResponseBean<Object> listAdmin()
 	{
-		List<UserBean> adminList;
-		adminList = taskDao.getAdminList();
+		HashMap<UserBean,List<TaskBean>> adminMap;
+		adminMap= taskDao.getAdminList();
 		ResponseBean<Object> responseBean = new ResponseBean<>();
-		if(adminList==null) {
+		if(adminMap==null) {
 			responseBean.setCode(404);
 			responseBean.setData(null);
 			responseBean.setMessage("Error:: No admin roles present yet");
 		}
 		else {
 			responseBean.setCode(200);
-			responseBean.setData(adminList);
+			responseBean.setData(adminMap);
+			responseBean.setMessage("Success");
+		}
+		return responseBean;
+	}
+	
+	@GetMapping("/list_underperformed_tasks")
+	public ResponseBean<Object> getUnderPerformedTasks()
+	{
+		ResponseBean<Object> responseBean = new ResponseBean<>();
+		List<TaskBean> taskList;
+		taskList = taskDao.getUnderPerfTasks();
+		if(taskList==null) {
+			responseBean.setCode(404);
+			responseBean.setData(null);
+			responseBean.setMessage("Error:: No under performed tasks present yet");
+		}
+		else {
+			responseBean.setCode(200);
+			responseBean.setData(taskList);
+			responseBean.setMessage("Success");
+		}
+		return responseBean;
+	}
+	
+	@GetMapping("/list_overperformed_tasks")
+	public ResponseBean<Object> getOverPerformedTasks()
+	{
+		ResponseBean<Object> responseBean = new ResponseBean<>();
+		List<TaskBean> taskList;
+		taskList = taskDao.getOverPerfTasks();
+		if(taskList==null) {
+			responseBean.setCode(404);
+			responseBean.setData(null);
+			responseBean.setMessage("Error:: No over performed tasks present yet");
+		}
+		else {
+			responseBean.setCode(200);
+			responseBean.setData(taskList);
 			responseBean.setMessage("Success");
 		}
 		return responseBean;
