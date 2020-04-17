@@ -7,17 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.bean.UserDataBean;
-
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.List;
@@ -36,6 +29,11 @@ import com.bean.UserBean;
  * add_user --> Aastha change_password --> Aastha update_profile --> Aastha
  * delete_user --> Pheni list_users --> Pheni view_user --> Pheni
  */
+
+
+import com.bean.UserBean;
+
+
 
 @Repository
 public class UserDao {

@@ -162,11 +162,11 @@ public class UserController {
 	}
 	
 	//delete_user
-		@DeleteMapping("user/{user_id}")
+		@DeleteMapping("deleteuser/{user_id}")
 		public ResponseBean<Integer> deleteUser(@PathVariable("user_id") int id){
 			 
 			int rowsAffected= userDao.deleteUser(id);
-			ResponseBean rb = new ResponseBean();
+			ResponseBean<Integer> rb = new ResponseBean<Integer>();
 			
 			if(rowsAffected==1)
 			{
@@ -183,7 +183,7 @@ public class UserController {
 		}
 		
 		//list_users
-		@GetMapping("/users")
+		@GetMapping("/listusers")
 		public ResponseBean<ArrayList<UserBean>> listUsers() {
 			ArrayList<UserBean> users = userDao.listUsers();
 			ResponseBean<ArrayList<UserBean>> rb = new ResponseBean<>();
@@ -203,10 +203,10 @@ public class UserController {
 		}
 		
 		//view_user
-		@GetMapping("/user/{user_id}")
+		@GetMapping("/viewuser/{user_id}")
 		public ResponseBean<UserBean> getUser(@PathVariable("user_id") int id) {
 			UserBean userBean = userDao.getUserByFirstName(id);
-			ResponseBean rb = new ResponseBean();
+			ResponseBean<UserBean> rb = new ResponseBean<UserBean>();
 			if(userBean!=null)
 			{
 				rb.setCode(200);
