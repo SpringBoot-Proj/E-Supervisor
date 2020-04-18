@@ -2,14 +2,21 @@ package com.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+
+import java.util.Date;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -141,7 +148,7 @@ public class TaskDao {
 				taskBean.setUser_id(rs.getInt("user_id"));
 				taskBean.setTask_id(rs.getInt("task_id"));
 				taskBean.setAdmin_id(rs.getInt("admin_id"));
-				taskBean.setComplete(rs.getBoolean("isComplete"));
+				taskBean.setIsComplete(rs.getInt("iscomplete"));
 				taskBean.setCompletion_date(rs.getDate("completion_date"));
 				taskBean.setStart_date(rs.getDate("start_date"));
 				taskBean.setEnd_date(rs.getDate("end_date"));
@@ -194,5 +201,96 @@ public class TaskDao {
 		return roleBean!=null?roleBean.getRoleID():-1;
 	}
 
+
+	public void addTask(TaskBean taskBean) {
+		
+		stmt.update("insert into task (task_name,description,start_date,end_date,user_id,admin_id) values (?,?,?,?,?,?)",taskBean.getTask_name(),taskBean.getDescription(),taskBean.getStart_date(),taskBean.getEnd_date(),taskBean.getUser_id(),taskBean.getAdmin_id());
+		
+	}
+
+	public TaskBean updateTask(TaskBean taskBean, int task_id) {
+		
+		System.out.println(taskBean.getEnd_date());
+		int i=stmt.update("update task set task_name=?, description=?, start_date=?, end_date=?, user_id=?, admin_id=? where task_id=?",taskBean.getTask_name(),taskBean.getDescription(),taskBean.getStart_date(),taskBean.getEnd_date(),taskBean.getUser_id(),taskBean.getAdmin_id(),task_id);
+		if(i==1)
+			return viewTask(task_id);
+		else
+			return null;
+	}
+
+	public boolean deteleTask(int task_id) {
+		
+		int i=stmt.update("delete from task where task_id="+task_id);
+		if(i==1)
+			return true;
+		else
+			return false;
+	}
 	
+	public ArrayList<TaskBean> listTasks() {
+
+		ArrayList<TaskBean> list = (ArrayList<TaskBean>) stmt.query("select * from task", new Rm());
+		return list;
+
+	}
+
+	class Rm implements RowMapper<TaskBean> {
+
+		public TaskBean mapRow(ResultSet rs, int rowNum) throws SQLException {
+			TaskBean bean = new TaskBean();
+			
+			bean.setUser_id(rs.getInt("user_id"));
+			bean.setTask_id(rs.getInt("task_id"));
+			bean.setTask_name(rs.getString("task_name"));
+			bean.setDescription(rs.getString("description"));
+			bean.setStart_date(rs.getDate("start_date"));
+			bean.setEnd_date(rs.getDate("end_date"));
+			bean.setIsComplete(rs.getInt("iscomplete"));
+			bean.setCompletion_date(rs.getDate("completion_date"));
+			bean.setComment(rs.getString("comment"));
+			bean.setAdmin_id(rs.getInt("admin_id"));
+			
+			
+			return bean;
+		}
+
+	}
+
+	public TaskBean viewTask(int task_id) {
+		//Try Catch because queryForObject return EmptyResultDataAccessException if it does not found record
+		try {
+			
+			TaskBean task = stmt.queryForObject("select * from task where task_id  ="+ task_id +"",new BeanPropertyRowMapper<TaskBean>(TaskBean.class));
+			return task;
+		}
+		catch(EmptyResultDataAccessException e)
+		{
+			return null;
+		}
+	}
+
+	public TaskBean completeTask(int task_id) {
+		
+		//SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		//Date date = new Date();
+		//String date_time = formatter.format(date);
+		//System.out.println(date_time);
+		LocalDate currentDate = LocalDate.now();
+		int i=stmt.update("update task set iscomplete=1,comment='',completion_date=? where task_id=?",currentDate,task_id);
+		if(i==1)
+			return viewTask(task_id);
+		else
+			return null;
+	}
+
+	public TaskBean reopenTask(int task_id, TaskBean taskBean) {
+		
+		int i=stmt.update("update task set iscomplete=0, completion_date=null, comment=? where task_id=? ",taskBean.getComment(),task_id);
+		if(i==1)
+			return viewTask(task_id);
+		else
+			return null;
+	}
+
+
 }

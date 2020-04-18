@@ -8,13 +8,39 @@ public class TaskBean {
 	private int user_id;
 	private int admin_id;
 	private String task_name;
+	
 	private String description;
 	private Date start_date;
 	private Date end_date;
 	private Date completion_date;
-	private boolean isComplete;
+	private int isComplete;
+	public int getIsComplete() {
+		return isComplete;
+	}
+	public void setIsComplete(int isComplete) {
+		this.isComplete = isComplete;
+	}
 	private String comment;
 	
+	
+	public Date getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
+	}
+	public Date getEnd_date() {
+		return end_date;
+	}
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
+	}
+	public Date getCompletion_date() {
+		return completion_date;
+	}
+	public void setCompletion_date(Date completion_date) {
+		this.completion_date = completion_date;
+	}
 	public int getTask_id() {
 		return task_id;
 	}
@@ -45,30 +71,8 @@ public class TaskBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Date getStart_date() {
-		return start_date;
-	}
-	public void setStart_date(Date start_date) {
-		this.start_date = start_date;
-	}
-	public Date getEnd_date() {
-		return end_date;
-	}
-	public void setEnd_date(Date end_date) {
-		this.end_date = end_date;
-	}
-	public Date getCompletion_date() {
-		return completion_date;
-	}
-	public void setCompletion_date(Date completion_date) {
-		this.completion_date = completion_date;
-	}
-	public boolean isComplete() {
-		return isComplete;
-	}
-	public void setComplete(boolean isComplete) {
-		this.isComplete = isComplete;
-	}
+	
+	
 	public String getComment() {
 		return comment;
 	}

@@ -19,30 +19,27 @@ public class RoleDao {
 	@Autowired
 	JdbcTemplate stmt;
 
-	public boolean addRoleType(UserBean userBean,String roleType) {
+	public int addRoleType(int userid, String roleType) {
 
 		RoleBean roleBean = null;
 		roleBean = getRole(roleType);
-		int rowsAffected = stmt.update("insert into users_role(userid,roleid) values(?,?)",userBean.getUser_id(),roleBean.getRoleID());
-		
-		if(rowsAffected>0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
+		int rowsAffected = stmt.update("insert into users_role(userid,roleid) values(?,?)", userid,
+				roleBean.getRoleID());
+
+		if (rowsAffected > 0) {
+			return roleBean.getRoleID();
+		} else {
+			return -1;
 		}
 	}
-	
-	public ArrayList<RoleBean> listRoles()
-	{
-		
+
+	public ArrayList<RoleBean> listRoles() {
+
 		String sql = "select * from role";
-		ArrayList<RoleBean> roles = (ArrayList<RoleBean>) stmt.query(sql,new MyRowMapper());
-		return roles ;
+		ArrayList<RoleBean> roles = (ArrayList<RoleBean>) stmt.query(sql, new MyRowMapper());
+		return roles;
 	}
-	
+
 	class MyRowMapper implements RowMapper<RoleBean> {
 
 		@Override
@@ -55,14 +52,28 @@ public class RoleDao {
 		}
 
 	}
-	
+
 	public RoleBean getRole(String roleType) {
-		
-		String sql="select * from role where rolename=?";
-		RoleBean roleBean = stmt.queryForObject(sql, new Object[] {roleType
-				},new MyRowMapper());
-		
+
+		String sql = "select * from role where rolename=?";
+		RoleBean roleBean = stmt.queryForObject(sql, new Object[] { roleType }, new MyRowMapper());
+
 		return roleBean;
+	}
+
+	public int updateRoleType(int userid, String roleName) {
+
+		RoleBean roleBean = null;
+		roleBean = getRole(roleName);
+		int rowsAffected = stmt.update("update into users_role set roleid=? where userid=?", roleBean.getRoleID(),
+				userid);
+
+		if (rowsAffected > 0) {
+			return roleBean.getRoleID();
+		} else {
+			return -1;
+		}
+
 	}
 
 }
