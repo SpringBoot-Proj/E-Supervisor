@@ -1,28 +1,19 @@
 package com.bean;
 
-public class UserBean
-{
+public class UserBean {
+
 	private int user_id;
 	private String first_name;
 	private String last_name;
 	private String email;
 	private String password;
-	private int role_id;
-	
-	public int getRole_id() {
-		return role_id;
-	}
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
-	}
 	
 	public int getUser_id() {
 		return user_id;
 	}
-	public void setRole_id(int role_id) {
-		this.role_id = role_id;
+	public void setUser_id(int user_id) {
+		this.user_id = user_id;
 	}
-
 	public String getFirst_name() {
 		return first_name;
 	}
@@ -47,8 +38,12 @@ public class UserBean
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
+	@Override
+	public String toString() {
+		return "[user_id=" + user_id + ", first_name=" + first_name + ", last_name=" + last_name + ", email="
+				+ email + ", password=" + password + "]";
+	}
 	
 	
+
 }

@@ -2,10 +2,12 @@ package com.controller;
 
 import java.util.ArrayList;
 
+import org.hibernate.validator.constraints.SafeHtml.Attribute;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bean.ResponseBean;
@@ -18,66 +20,50 @@ public class RoleController {
 
 	@Autowired
 	RoleDao roleDao;
-
+	
 	@PostMapping("/addRole")
-	public ResponseBean<Object> addRole(int userid, String roleName) {
+	public ResponseBean<Object> addRole(UserBean userBean,String roleName)
+	{
+		System.out.println(userBean);
+		System.out.println(roleName);
 		ResponseBean<Object> responseBean = new ResponseBean<>();
-
-		int roleid = roleDao.addRoleType(userid, roleName);
-		RoleBean roleBean = new RoleBean();
-		roleBean.setRoleID(roleid);
-		roleBean.setRoleName(roleName);
-
-		if (roleid > 0) {
+		
+		boolean status = roleDao.addRoleType(userBean,roleName);
+		
+		if(status)
+		{
 			responseBean.setCode(200);
-			responseBean.setMessage("successfully added the role for userid=>" + userid);
-			responseBean.setData(roleBean);
-		} else {
-			responseBean.setCode(400);
-			responseBean.setMessage("problem occured adding the role for userid=>" + userid);
-			responseBean.setData(roleBean);
+			responseBean.setMessage("successfully added the role "+roleName);
 		}
-
+		else
+		{
+			responseBean.setCode(400);
+			responseBean.setMessage("problem occured adding the role "+roleName);
+		}
+		
+		
 		return responseBean;
 	}
-
+	
 	@GetMapping("/listRoles")
-	public ResponseBean<ArrayList<RoleBean>> listRoles() {
+	
+	public ResponseBean<ArrayList<RoleBean>> getRoles()
+	{
 		ArrayList<RoleBean> roles = roleDao.listRoles();
 		ResponseBean<ArrayList<RoleBean>> responseBean = new ResponseBean<>();
-
-		if (roles != null) {
-			responseBean.setData(roles);
+		
+		if(roles!=null)
+		{	responseBean.setData(roles);
 			responseBean.setCode(200);
 			responseBean.setMessage(roles.size() + " number of roles");
-
-		} else {
+			
+		}
+		else
+		{
 			responseBean.setCode(400);
 			responseBean.setMessage("no such record");
 			responseBean.setData(null);
 		}
 		return (ResponseBean<ArrayList<RoleBean>>) responseBean;
 	}
-
-	@PutMapping("/updateRole")
-	public ResponseBean<RoleBean> updateRole(int userid, String roleName) {
-		ResponseBean<RoleBean> responseBean = new ResponseBean<>();
-		int roleid = roleDao.addRoleType(userid, roleName);
-		RoleBean roleBean = new RoleBean();
-		roleBean.setRoleID(roleid);
-		roleBean.setRoleName(roleName);
-
-		if (roleid > 0) {
-			responseBean.setCode(200);
-			responseBean.setMessage("successfully updated the role for userid=>"+userid);
-			responseBean.setData(roleBean);
-		} else {
-			responseBean.setCode(400);
-			responseBean.setMessage("problem occured updating the role for userid=>"+userid);
-			responseBean.setData(roleBean);
-		}
-
-		return responseBean;
-	}
-
 }
