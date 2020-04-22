@@ -17,11 +17,9 @@ public class ESupervisorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ESupervisorApplication.class, args);
 	}
-	
+
 	@Bean
 	public Docket supervisorApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com"))
-				.build();
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com")).build();
 	}
-
 }
