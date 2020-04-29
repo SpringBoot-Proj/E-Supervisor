@@ -57,8 +57,9 @@ public class UserController {
 			session.setAttribute("last_name",userDataBean.getLast_name());
 			session.setAttribute("email",userDataBean.getEmail());
 			session.setAttribute("role_id",userDataBean.getRole_id());
+			session.setAttribute("password", userDataBean.getPassword());
 			
-			userDataBean.setPassword(null);
+		//	userDataBean.setPassword(null);
 			responseBean.setData(userDataBean);
 			responseBean.setCode(1);
 			responseBean.setMessage("User is Valid");
@@ -100,10 +101,10 @@ public class UserController {
 		return responseBean;
 	}
 	
-	@PostMapping("/changepassword/{userid}")
-	public ResponseBean<?> change_password(@PathVariable int userid, @RequestParam("old_password") String oldPassword, @RequestParam("new_password") String newPassword)
+	@PostMapping("/changepassword/{user_id}")
+	public ResponseBean<?> change_password(@PathVariable("user_id") int user_id, @RequestParam("old_password") String oldPassword, @RequestParam("new_password") String newPassword)
 	{
-	boolean isError = userDao.change_password(userid,oldPassword,newPassword);
+	boolean isError = userDao.change_password(user_id,oldPassword,newPassword);
 
 	ResponseBean<Object> responseBean = new ResponseBean<>();
 
@@ -137,8 +138,8 @@ public class UserController {
 		        	
 		            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
 		            mimeMessageHelper.setSubject("Reset Pass");
-		            mimeMessageHelper.setFrom(new InternetAddress(email, "eSupervise.com"));
-		            mimeMessageHelper.setTo("spemeet999@gmail.com");
+		            mimeMessageHelper.setFrom(new InternetAddress(email, "http://localhost:9392/swagger-ui.html"));
+		            mimeMessageHelper.setTo("patelavadh315@gmail.com");
 		            mimeMessageHelper.setText("pass is: " +userDataBean.getPassword());
 		 
 		            mailSender.send(mimeMessageHelper.getMimeMessage());
@@ -163,9 +164,9 @@ public class UserController {
 	
 	//delete_user
 		@DeleteMapping("deleteuser/{user_id}")
-		public ResponseBean<Integer> deleteUser(@PathVariable("user_id") int id){
+		public ResponseBean<Integer> deleteUser(@PathVariable("user_id") int user_id){
 			 
-			int rowsAffected= userDao.deleteUser(id);
+			int rowsAffected= userDao.deleteUser(user_id);
 			ResponseBean<Integer> rb = new ResponseBean<Integer>();
 			
 			if(rowsAffected==1)
@@ -204,8 +205,8 @@ public class UserController {
 		
 		//view_user
 		@GetMapping("/viewuser/{user_id}")
-		public ResponseBean<UserBean> getUser(@PathVariable("user_id") int id) {
-			UserBean userBean = userDao.getUserByFirstName(id);
+		public ResponseBean<UserBean> getUser(@PathVariable("user_id") int user_id) {
+			UserBean userBean = userDao.getUserByFirstName(user_id);
 			ResponseBean<UserBean> rb = new ResponseBean<UserBean>();
 			if(userBean!=null)
 			{

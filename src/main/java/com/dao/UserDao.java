@@ -45,8 +45,8 @@ public class UserDao {
 
 
 	public UserDataBean getUserDataByEmail(String email) {
-		UserDataBean userDataBean;
-		userDataBean = stmt.queryForObject("select * from users where email=\'" + email + "\'",
+		UserDataBean userDataBean = null;
+		userDataBean = stmt.queryForObject("select * from users where email=\'" + email  + "\'"+";",
 				new BeanPropertyRowMapper<UserDataBean>(UserDataBean.class));
 		return userDataBean;
 	}
@@ -87,10 +87,11 @@ public class UserDao {
 	// Get Single User Detail by FirstName
 	// Input:UserID
 	// Output:Return details of user
-	public UserBean getUserByFirstName(int id) {
+	public UserBean getUserByFirstName(int user_id) {
 		//Try Catch because queryForObject return EmptyResultDataAccessException if it does not found record
 		try {
-			UserBean user = stmt.queryForObject("select * from users where user_id  ="+id+"",
+			
+			UserBean user = stmt.queryForObject("select * from users where user_id  ="+user_id+";",
 					new BeanPropertyRowMapper<UserBean>(UserBean.class));
 			return user;
 		}
@@ -111,7 +112,7 @@ public class UserDao {
   
 	  public boolean update_profile(UserBean userBean)
 	  {
-		  int i= stmt. update("update users set first_name = ?, last_name= ?, email= ?, password = ? where user_id = ? ",userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(),userBean.getPassword(), userBean.getUser_id());
+		  int i= stmt. update("update users set first_name = ?, last_name= ?, email= ?, password = ?, role_id=? where user_id = ? ",userBean.getFirst_name(), userBean.getLast_name(), userBean.getEmail(),userBean.getPassword(),userBean.getRole_id(), userBean.getUser_id());
 		  if(i==1)
 			  return true;
 		  else 

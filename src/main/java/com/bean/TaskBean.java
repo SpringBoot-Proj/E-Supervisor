@@ -2,6 +2,8 @@ package com.bean;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class TaskBean {
 
 	private int task_id;
@@ -10,8 +12,12 @@ public class TaskBean {
 	private String task_name;
 	
 	private String description;
+	
+	@DateTimeFormat(pattern="DD-MM-YYYY")
 	private Date start_date;
+	@DateTimeFormat(pattern="DD-MM-YYYY")
 	private Date end_date;
+	@DateTimeFormat(pattern="DD-MM-YYYY")
 	private Date completion_date;
 	private int isComplete;
 	public int getIsComplete() {

@@ -1,0 +1,1 @@
+create table mail(email varchar(35), message varchar(100));

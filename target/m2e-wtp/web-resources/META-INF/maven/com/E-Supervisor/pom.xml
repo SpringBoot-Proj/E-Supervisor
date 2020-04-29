@@ -86,27 +86,41 @@
 			</exclusions>
 		</dependency>
 					  <!-- https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java -->
+
+	<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+		<dependency>
+   			    <groupId>org.flywaydb</groupId>
+  		  		<artifactId>flyway-core</artifactId>
+  		
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/net.authorize/anet-java-sdk -->
 <dependency>
-    <groupId>com.mashape.unirest</groupId>
-    <artifactId>unirest-java</artifactId>
-    <version>1.4.9</version>
+    <groupId>net.authorize</groupId>
+    <artifactId>anet-java-sdk</artifactId>
+    <version>2.0.1</version>
 </dependency>
+		
+<!--   <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+        </dependency>  -->	
+	
 	</dependencies>
 
 	<build>
 		<plugins>
+	<plugin>
+    <groupId>org.flywaydb</groupId>
+    <artifactId>flyway-maven-plugin</artifactId>
+    <version>5.2.4</version>
+</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			
-			<plugin>
-					<groupId>org.flywaydb</groupId>
-  					<artifactId>flyway-maven-plugin</artifactId>
-  				<configuration>
-    				<url>${env.JDBC_DATABASE_URL}</url>
-  				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 

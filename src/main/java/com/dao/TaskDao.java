@@ -197,14 +197,14 @@ public class TaskDao {
 	private int getRoleId(String roleName) {
 		String sql = "select * from role where role_name="+"'"+roleName+"'";
 		RoleBean roleBean = stmt.queryForObject(sql, new BeanPropertyRowMapper<RoleBean>(RoleBean.class));
-		System.out.println("Role 2 "+roleBean.getRoleName());
-		return roleBean!=null?roleBean.getRoleID():-1;
+		System.out.println("Role 2 "+roleBean.getRole_name());
+		return roleBean!=null?roleBean.getRole_id():-1;
 	}
 
 
 	public void addTask(TaskBean taskBean) {
 		
-		stmt.update("insert into task (task_name,description,start_date,end_date,user_id,admin_id) values (?,?,?,?,?,?)",taskBean.getTask_name(),taskBean.getDescription(),taskBean.getStart_date(),taskBean.getEnd_date(),taskBean.getUser_id(),taskBean.getAdmin_id());
+		stmt.update("insert into task (task_name,description,start_date,end_date,comment,user_id,admin_id) values (?,?,?,?,?,?)",taskBean.getTask_name(),taskBean.getDescription(),taskBean.getStart_date(),taskBean.getEnd_date(),taskBean.getComment(),taskBean.getUser_id(),taskBean.getAdmin_id());
 		
 	}
 

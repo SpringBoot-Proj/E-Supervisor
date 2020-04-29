@@ -1,0 +1,1 @@
+create table task(task_id serial PRIMARY KEY,task_name varchar(255),description varchar(255),start_date date,end_date date,completion_date date,comment varchar(255),isComplete int DEFAULT 0,role_id int REFERENCES users (user_id),admin_id int REFERENCES users (user_id));

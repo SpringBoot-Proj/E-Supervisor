@@ -19,23 +19,18 @@ public class RoleDao {
 	@Autowired
 	JdbcTemplate stmt;
 
-	public int addRoleType(int userid, String roleType) {
+	public void addRoleType(RoleBean roleBean) {
 
-		RoleBean roleBean = null;
-		roleBean = getRole(roleType);
-		int rowsAffected = stmt.update("insert into users_role(userid,roleid) values(?,?)", userid,
-				roleBean.getRoleID());
+		
+		stmt.update("insert into users_role(role_name,role_id) values(?,?)",roleBean.getRole_name(),
+				roleBean.getRole_id());
 
-		if (rowsAffected > 0) {
-			return roleBean.getRoleID();
-		} else {
-			return -1;
-		}
+		
 	}
 
 	public ArrayList<RoleBean> listRoles() {
 
-		String sql = "select * from role";
+		String sql = "select * from users_role";
 		ArrayList<RoleBean> roles = (ArrayList<RoleBean>) stmt.query(sql, new MyRowMapper());
 		return roles;
 	}
@@ -45,8 +40,8 @@ public class RoleDao {
 		@Override
 		public RoleBean mapRow(ResultSet rs, int rowNum) throws SQLException {
 			RoleBean roleBean = new RoleBean();
-			roleBean.setRoleID(rs.getInt("roleid"));
-			roleBean.setRoleName(rs.getString("rolename"));
+			roleBean.setRole_id(rs.getInt("role_id"));
+			roleBean.setRole_name(rs.getString("role_name"));
 
 			return roleBean;
 		}
@@ -55,25 +50,34 @@ public class RoleDao {
 
 	public RoleBean getRole(String roleType) {
 
-		String sql = "select * from role where rolename=?";
-		RoleBean roleBean = stmt.queryForObject(sql, new Object[] { roleType }, new MyRowMapper());
+		String sql = "select * from users_role where role_name=?";
+		RoleBean roles = (RoleBean) stmt.query(sql, new MyRowMapper());
 
-		return roleBean;
+		return roles;
 	}
 
-	public int updateRoleType(int userid, String roleName) {
+	public RoleBean updateRoleType(RoleBean roleBean,int role_id) {
 
-		RoleBean roleBean = null;
-		roleBean = getRole(roleName);
-		int rowsAffected = stmt.update("update into users_role set roleid=? where userid=?", roleBean.getRoleID(),
-				userid);
+		
+	//	roles = getRole(role_name);
+		int rowsAffected = stmt.update("update users_role set role_name=? where role_id=?",roleBean.getRole_name(),roleBean.getRole_id()
+				);
 
-		if (rowsAffected > 0) {
-			return roleBean.getRoleID();
+		if (rowsAffected == 1) {
+			return roleBean;
 		} else {
-			return -1;
+			return null;
 		}
 
+	}
+
+	public boolean deteleRole(int role_id) {
+		
+		int i=stmt.update("delete from users_role where role_id="+role_id);
+		if(i==1)
+			return true;
+		else
+			return false;
 	}
 
 }

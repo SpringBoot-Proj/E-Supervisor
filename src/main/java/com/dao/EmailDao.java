@@ -20,7 +20,7 @@ public class EmailDao {
 
 	public List<EmailBean> getAll() {
 		
-		String sql = "select * from mail ";
+		String sql = "select * from mail";
 		
 		RowMapper<EmailBean> row = new RowMapper<EmailBean>()
 				{
@@ -38,12 +38,11 @@ public class EmailDao {
 		            return stmt.query(sql, row);
 	             }
 
-	public EmailBean  insert(@RequestBody EmailBean mail ) {
-		String sql = "insert into mail(email,message) values(?,?)";
+	public EmailBean  insert(@RequestBody EmailBean emailBean ) {
 		
-		 stmt.update(sql,mail.getEmail(),mail.getMessage());
+		 stmt.update("insert into mail(email,message) values(?,?);",emailBean.getEmail(),emailBean.getMessage());
 		 
-		 return mail;
+		 return emailBean;
 	}
 
 }

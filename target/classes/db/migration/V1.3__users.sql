@@ -1,0 +1,1 @@
+create table users(user_id serial PRIMARY KEY,first_name varchar(40),last_name varchar(40),email varchar(60),password varchar(40),role_id int REFERENCES users_role(role_id));
